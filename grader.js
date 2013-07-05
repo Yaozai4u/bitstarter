@@ -24,45 +24,101 @@ References:
 var fs = require('fs');
 var program = require('commander');
 var cheerio = require('cheerio');
-var HTMLFILE_DEFAULT = "index.html";
+var rest = require('restler');
+var HTMLFILE_DEFAULT = ""; // no default value
 var CHECKSFILE_DEFAULT = "checks.json";
 
 var assertFileExists = function(infile) {
     var instr = infile.toString();
     if(!fs.existsSync(instr)) {
-        console.log("%s does not exist. Exiting.", instr);
-        process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
+	console.log("%s does not exist. Exiting.", instr);
+	process.exit(1); // http://nodejs.org/api/process.html#process_process_exit_code
     }
     return instr;
 };
+var checkUrlFormat = function(url) {
+    var re = /^(http|https):\/\//i;
+    if(!url.match(re)) {
+	console.log("%s is not url format.use 'http|https://'  Exiting.", url);
+	process.exit(1);
+	}
+    return url;
 
-var cheerioHtmlFile = function(htmlfile) {
-    return cheerio.load(fs.readFileSync(htmlfile));
+};
+
+var HtmlFile = function(htmlfile) {
+    return fs.readFileSync(htmlfile);
+};
+
+var HtmlUrl = function(url, callback) {
+//console.log("getHtmlUrl" + url);
+   rest.get(url).on('complete', function(data,response){
+       if(response.statusCode == 200){
+	callback(data);
+	}
+	else
+	{
+	console.log("can't get "+ url );
+	console.log("response code: " + response.statusCode);
+	}
+    });
 };
 
 var loadChecks = function(checksfile) {
     return JSON.parse(fs.readFileSync(checksfile));
 };
 
-var checkHtmlFile = function(htmlfile, checksfile) {
-    $ = cheerioHtmlFile(htmlfile);
+var checkHtml = function(htmlfile, url , checksfile) {
+
+    if(htmlfile !== null && htmlfile !== '')
+    {
+	console.log("Check "+ htmlfile);
+	printResult( checkTags( HtmlFile(htmlfile),checksfile));
+    }
+    if(url !== null && url !== '')
+    {
+	console.log(" Check Url: " + url);
+	HtmlUrl(url, function(returnVal){
+	printResult( checkTags(returnVal, checksfile));
+	});
+
+    }
+};
+
+var printResult = function(checkJson) {
+    var outJson = JSON.stringify(checkJson, null, 4);
+    console.log(outJson);
+
+};
+
+var checkTags = function(html, checksfile) {
+//console.log(html);
+    $ = cheerio.load(html);
+
     var checks = loadChecks(checksfile).sort();
     var out = {};
     for(var ii in checks) {
-        var present = $(checks[ii]).length > 0;
-        out[checks[ii]] = present;
+	var present = $(checks[ii]).length > 0;
+	out[checks[ii]] = present;
     }
     return out;
 };
 
+var clone = function(fn) {
+    // Workaround for commander.js issue.
+    // http://stackoverflow.com/a/6772648
+    return fn.bind({});
+};
+
 if(require.main == module) {
     program
-        .option('-c, --checks ', 'Path to checks.json', assertFileExists, CHECKSFILE_DEFAULT)
-        .option('-f, --file ', 'Path to index.html', assertFileExists, HTMLFILE_DEFAULT)
-        .parse(process.argv);
-    var checkJson = checkHtmlFile(program.file, program.checks);
-    var outJson = JSON.stringify(checkJson, null, 4);
-    console.log(outJson);
+	.option('-c, --checks <check_file>', 'Path to checks.json', clone(assertFileExists), CHECKSFILE_DEFAULT)
+	.option('-f, --file <html_file>', 'Path to index.html', clone(assertFileExists), HTMLFILE_DEFAULT)
+	.option('-u, --url <url>', 'Path to http://url',checkUrlFormat,'')
+	.parse(process.argv);
+
+    checkHtml(program.file, program.url, program.checks);
+
 } else {
     exports.checkHtmlFile = checkHtmlFile;
 }
