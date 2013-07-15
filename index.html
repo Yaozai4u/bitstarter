@@ -6,6 +6,8 @@
     <title>My First Bitstarter</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://d396qusza40orc.cloudfront.net/startup%2Fcode%2Fbootstrap-combined.no-icons.min.css">
+    <link href="http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,300italic,400italic,500italic,700italic" rel="stylesheet" type="text/css">
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,300,400,600,700,800" rel="stylesheet" type="text/css">
       <style type="text/css">
 	/* Large desktop */
 	@media (min-width: 980px) {
@@ -18,12 +20,26 @@
 	@media (max-width: 480px) {
 
 	}
-      .container {
-      width: 960px;
-      }
-      p.lead {
-      padding-top: 15px;
-      }
+
+	/* All form factor */
+	
+	/* Main body and headings */
+	body {
+	font-family: 'Open Sans', Helvetica, Arial, sans-serif;
+	}
+	.heading, .subheading {
+	font-family: 'Ubuntu', Helvetica, Arial, sans-serif;
+	text-align: center;
+	}
+	p.lead {
+	padding-top: 1.5%;
+	font-size: 24px;
+	line-height: 30px;
+	}
+	p {
+	font-size: 18px;
+	line-height: 24px;
+	}
       .navigation, .pitch, .section1, .section2, .faq, .footer {
       padding: 10px 0px 10px 0px;
       }
@@ -75,27 +91,20 @@
     <!-- blogs.endjin.com/2013/04/tips-for-implementing-responsive-designs-using-bootstrap/ -->
     <!-- http://stackoverflow.com/a/12270322 -->
     <div class="container">
-      <div class="row-fluid navigation">
-	<div class="span2 logo">
-	  Logo
-	</div>
-	<div class="span6 blank">
-	  Blank
-	</div>
-	<div class="span4 about">
-	  About
-	</div>
-      </div>
-
+      <!-- Font and paired font of .heading/.subheading and body from Google Fonts -->
+      <!-- www.google.com/fonts/specimen/Ubuntu -->
+      <!-- www.google.com/fonts/specimen/Ubuntu#pairings -->
       <div class="row-fluid heading">
 	<div class="span12">
-	  <h1> Bitstarter Title</h1>
+	  <h1>Product</h1>
 	</div>
       </div>
 		
       <div class="row-fluid subheading">
 	<div class="span12">
-	  <p class="lead">This is my first bitstarter project.</p>
+          <!-- Special typography from Bootstrap for lead paragraph. -->
+          <!-- http://twitter.github.io/bootstrap/base-css.html#typography -->
+	  <p class="lead">One sentence description.</p>
 	</div>
       </div>
 			
