@@ -40,9 +40,14 @@
 	font-size: 18px;
 	line-height: 24px;
 	}
-      .navigation, .pitch, .section1, .section2, .faq, .footer {
-      padding: 10px 0px 10px 0px;
-      }
+	/* Video pitch and Action */
+	.pitch {
+	padding: 2.5% 0%;
+	}
+	.order {
+	padding: 2% 0%;
+	}
+
       .video, .thermometer, .order, .social {
       border: 1px dotted;
       text-align: center;
@@ -107,10 +112,11 @@
 	  <p class="lead">One sentence description.</p>
 	</div>
       </div>
-			
+
       <div class="row-fluid pitch">
-	<div class="span6 video">
-	  Video
+	<!-- http://twitter.github.io/bootstrap/scaffolding.html#gridSystem -->
+	<div class="span5 offset1 video">
+	  <img class="img-polaroid" src="http://placehold.it/480x300">
 	</div>
 	<div class="span6">
 	  <div class="thermometer">
